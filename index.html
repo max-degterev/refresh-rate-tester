@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Refresh rate tester</title>
+  <style type="text/css">
+    html {
+      background: red;
+    }
+    .fps {
+      padding: 3px 5px;
+      position: absolute;
+      right: 0;
+      top: 0;
+
+      background: #000;
+      color: #fff;
+
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="fps"><span class="fps-count">0</span> FPS</div>
+  <script>
+    var fps = 0,
+        START_FPS = 60,
+
+        $count = document.querySelector('.fps-count'),
+        $html = document.documentElement;
+
+    var updateFPS = function(num) {
+      $count.innerHTML = fps = Math.max(0, num);
+    };
+
+    var refreshLoop = function() {
+      $html.style.background = 'blue';
+      window.setTimeout(refreshLoop, 1000 / fps);
+      window.setTimeout(function(){ $html.style.background = 'red'; }, 0);
+    };
+
+    var changeFPS = function(e) {
+      // 38 = UP, 40 = DOWN
+      var step = 1;
+      if (e.shiftKey) step = 10;
+
+      if (e.keyCode === 38) {
+        updateFPS(fps + step);
+      }
+      if (e.keyCode === 40) {
+        updateFPS(fps - step);
+      }
+    };
+
+    document.addEventListener('keydown', changeFPS, false);
+
+    updateFPS(START_FPS);
+    refreshLoop();
+  </script>
+</body>
+</html>
